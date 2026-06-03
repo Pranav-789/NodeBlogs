@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+
 import { motion, type Variants } from 'framer-motion';
 import { ArrowRight, BookOpen, PenTool, MessageCircle, BarChart, Shield, CheckCircle } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
@@ -7,11 +7,7 @@ import { useAuth } from '../context/AuthContext';
 export default function LandingPage() {
   const navigate = useNavigate();
   const { user } = useAuth();
-  const learnMoreRef = useRef<HTMLDivElement>(null);
 
-  const scrollToLearnMore = () => {
-    learnMoreRef.current?.scrollIntoView({ behavior: 'smooth' });
-  };
 
   const containerVariants: Variants = {
     hidden: { opacity: 0 },
@@ -151,7 +147,7 @@ export default function LandingPage() {
       </section>
 
       {/* Features Section */}
-      <section ref={learnMoreRef} className="py-24 bg-gray-50 dark:bg-gray-900/50">
+      <section className="py-24 bg-gray-50 dark:bg-gray-900/50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-16">
                 <h2 className="text-3xl font-bold text-gray-900 dark:text-white sm:text-4xl mb-4">Why choose NodeBlogs?</h2>

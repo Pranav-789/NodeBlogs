@@ -21,7 +21,13 @@ export const postBlog = async(req: Request, res: Response) => {
         });
 
         const authorName = user?.name || "Anonymous";
-        const cleanContent = DOMPurify.sanitize(content);
+        
+        let cleanContent = content;
+        try {
+            JSON.parse(content);
+        } catch (e) {
+            cleanContent = DOMPurify.sanitize(content);
+        }
 
         const post = await prisma.blog.create({
             data: {
@@ -69,7 +75,12 @@ export const updateBlog = async(req: Request, res: Response) => {
             .json({ message: "Not allowed to edit this blog" });
         }
 
-        const cleanContent = DOMPurify.sanitize(newContent);
+        let cleanContent = newContent;
+        try {
+            JSON.parse(newContent);
+        } catch (e) {
+            cleanContent = DOMPurify.sanitize(newContent);
+        }
 
         const updatedPost = await prisma.blog.update({
             where: {id: postId},
@@ -130,6 +141,53 @@ export const queryBlogById = async(req: Request, res: Response) => {
                 updatedAt: blogPost.updatedAt,
                 authorId: blogPost.userId,
                 isLiked: blogPost.likes.length > 0,
+                likesCount: blogPost._count,
+                authorName: blogPost.authorName
+            }
+        })
+    } catch (error) {
+        return res.status(500).json({message: "Failed to fetch blog post"})
+    }
+}
+
+export const queryPublicBlogById = async(req: Request, res: Response) => {
+    const {postId} = req.params;
+    if(!postId){
+        return res.status(400).json({message: "Post Id is required to fetch post"})
+    }
+
+    const blogId = Number(postId);
+    if (isNaN(blogId)) {
+      return res.status(400).json({ message: "Invalid postId" });
+    }
+
+    try {
+        const blogPost = await prisma.blog.findUnique({
+          where: { id: blogId },
+          select: {
+            title: true,
+            content: true,
+            userId: true,
+            authorName: true,
+            createdAt: true,
+            updatedAt: true,
+            _count: {select: {likes: true}},
+          },
+        });
+
+        if(!blogPost){
+            return res.status(404).json({message: "Blog post not found!!"});
+        }
+
+        return res.status(200).json({
+            message: "Blog post fetched successfully",
+            data: {
+                title: blogPost.title,
+                content: blogPost.content,
+                createdAt: blogPost.createdAt,
+                updatedAt: blogPost.updatedAt,
+                authorId: blogPost.userId,
+                isLiked: false, // Public viewer cannot like
                 likesCount: blogPost._count,
                 authorName: blogPost.authorName
             }
@@ -438,6 +496,7 @@ export const queryComments = async(req: Request, res: Response) => {
 
     return res.status(200).json({ message: "Comments fetched successfully", data: commentsOnPost });
   } catch (error) {
-    return res.status(200).json({ message: "blog comments fetched successfully" });
+    console.error("Error fetching comments:", error);
+    return res.status(200).json({ message: "blog comments fetched successfully", data: [] });
   }
 }

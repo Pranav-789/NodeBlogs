@@ -13,6 +13,8 @@ import Todos from './pages/Todos';
 import Blogs from './pages/Blogs';
 import CreateBlog from './pages/CreateBlog';
 import BlogDetail from './pages/BlogDetail';
+import PublicBlogs from './pages/PublicBlogs';
+import PublicBlogDetail from './pages/PublicBlogDetail';
 import MyBlogs from './pages/MyBlogs';
 import LandingPage from './pages/LandingPage';
 import UserProfile from './pages/UserProfile';
@@ -25,6 +27,10 @@ function App() {
           <Routes>
             {/* Landing Page Route */}
             <Route path="/" element={<LandingPage />} />
+            
+            {/* Public Explore Routes */}
+            <Route path="/explore" element={<PublicBlogs />} />
+            <Route path="/explore/:blogId" element={<PublicBlogDetail />} />
 
             {/* Public Routes - Auto-redirect to dashboard if logged in */}
             <Route element={<PublicRoute />}>

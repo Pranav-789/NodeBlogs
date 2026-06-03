@@ -2,7 +2,22 @@ import { useEffect, useState } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { blogAPI } from '../lib/api';
 import { useAuth } from '../context/AuthContext';
+import { useTheme } from '../context/ThemeContext';
 import DOMPurify from 'dompurify';
+import { useCreateBlockNote } from "@blocknote/react";
+import { BlockNoteView } from "@blocknote/mantine";
+import "@blocknote/core/fonts/inter.css";
+import "@blocknote/mantine/style.css";
+
+function BlockNoteRenderer({ content, theme }: { content: string, theme: 'light' | 'dark' }) {
+  const initialContent = JSON.parse(content);
+  const editor = useCreateBlockNote({ initialContent });
+  return (
+    <div className="w-full max-w-none blocknote-container mb-8">
+      <BlockNoteView editor={editor} editable={false} theme={theme} className="w-full !bg-transparent" />
+    </div>
+  );
+}
 
 interface Comment {
   id: number;
@@ -30,6 +45,7 @@ export default function BlogDetail() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const { user } = useAuth();
+  const { theme } = useTheme();
   const navigate = useNavigate();
 
   const fetchBlogData = async () => {
@@ -41,7 +57,7 @@ export default function BlogDetail() {
         blogAPI.getComments(Number(blogId)),
       ]);
       setBlog(blogRes.data.data);
-      setComments(commentsRes.data.data);
+      setComments(commentsRes.data.data || []);
     } catch (err: any) {
       setError(err.response?.data?.message || 'Failed to load blog post');
     } finally {
@@ -151,10 +167,26 @@ export default function BlogDetail() {
           </Link>
         </header>
 
-        <div
-          className="prose dark:prose-invert max-w-none mb-8 text-gray-700 dark:text-gray-300 leading-relaxed break-words whitespace-pre-wrap font-serif"
-          dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(blog.content) }}
-        />
+        {(() => {
+          let isJsonArray = false;
+          try {
+            const parsed = JSON.parse(blog.content);
+            isJsonArray = Array.isArray(parsed);
+          } catch (e) {
+            isJsonArray = false;
+          }
+
+          if (isJsonArray) {
+            return <BlockNoteRenderer content={blog.content} theme={theme} />;
+          }
+
+          return (
+            <div
+              className="prose dark:prose-invert max-w-none mb-8 text-gray-700 dark:text-gray-300 leading-relaxed break-words whitespace-pre-wrap font-serif"
+              dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(blog.content) }}
+            />
+          );
+        })()}
 
         <div className="flex items-center justify-between pt-6 border-t border-gray-100 dark:border-gray-700">
           <button

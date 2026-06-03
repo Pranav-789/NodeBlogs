@@ -10,6 +10,9 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@blocknote/core": "^0.51.4",
+    "@blocknote/mantine": "^0.51.4",
+    "@blocknote/react": "^0.51.4",
     "axios": "^1.13.5",
     "dompurify": "^3.3.1",
     "framer-motion": "^12.34.0",

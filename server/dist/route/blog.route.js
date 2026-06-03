@@ -1,10 +1,11 @@
 import express from "express";
-import { postBlog, updateBlog, queryBlogById, queryPopularBlogs, checkIfUserLikedBlog, countBlogsByAuthor, queryRecentBlogs, likeOnBlog, commentOnBlog, queryAuthorsBlogs, deleteBlog, queryComments, queryBlogsByAuthorId, } from "../controller/blog.controller.js";
+import { postBlog, updateBlog, queryBlogById, queryPopularBlogs, checkIfUserLikedBlog, countBlogsByAuthor, queryRecentBlogs, likeOnBlog, commentOnBlog, queryAuthorsBlogs, deleteBlog, queryComments, queryBlogsByAuthorId, queryPublicBlogById, } from "../controller/blog.controller.js";
 import { verfiyJwt } from "../middleware/verifyJwt.js";
 const router = express.Router();
 router.post("/create", verfiyJwt, postBlog);
 router.put("/update", verfiyJwt, updateBlog);
 router.get("/get/:postId", verfiyJwt, queryBlogById);
+router.get("/get-public/:postId", queryPublicBlogById);
 router.get("/popular/:pageNum", queryPopularBlogs);
 router.get("/check-like/:blogId", verfiyJwt, checkIfUserLikedBlog);
 router.get("/count-author/:authorId", countBlogsByAuthor);

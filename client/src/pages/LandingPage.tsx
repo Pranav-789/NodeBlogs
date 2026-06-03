@@ -45,10 +45,16 @@ export default function LandingPage() {
               <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center text-white font-bold text-lg">
                 B
               </div>
-              <span className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-indigo-600">Blog app</span>
+              <span className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-indigo-600">NodeBlogs</span>
             </div>
             
             <div className="flex items-center gap-4">
+              <button 
+                onClick={() => navigate('/explore')}
+                className="text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 font-medium text-sm transition-colors mr-2"
+              >
+                Explore
+              </button>
               {user ? (
                 <button 
                   onClick={() => navigate('/dashboard')}
@@ -116,10 +122,10 @@ export default function LandingPage() {
                         <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
                     </button>
                     <button 
-                        onClick={scrollToLearnMore}
-                        className="w-full sm:w-auto px-8 py-4 rounded-full bg-white dark:bg-gray-800 text-gray-700 dark:text-white font-bold text-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 transition-all flex items-center justify-center gap-2"
+                        onClick={() => navigate('/explore')}
+                        className="w-full sm:w-auto px-8 py-4 rounded-full bg-white dark:bg-gray-900 text-gray-700 dark:text-white font-bold text-lg border border-gray-200 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-gray-800 transition-all flex items-center justify-center gap-2"
                     >
-                        Learn More
+                        Explore Blogs
                     </button>
                 </motion.div>
             </motion.div>
@@ -148,7 +154,7 @@ export default function LandingPage() {
       <section ref={learnMoreRef} className="py-24 bg-gray-50 dark:bg-gray-900/50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-16">
-                <h2 className="text-3xl font-bold text-gray-900 dark:text-white sm:text-4xl mb-4">Why choose Blog app?</h2>
+                <h2 className="text-3xl font-bold text-gray-900 dark:text-white sm:text-4xl mb-4">Why choose NodeBlogs?</h2>
                 <p className="text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">Everything you need to create compelling content and manage your workflow efficiently.</p>
             </div>
             
@@ -204,7 +210,7 @@ export default function LandingPage() {
                 
                 <h2 className="text-3xl md:text-5xl font-bold mb-6 relative z-10">Ready to start your journey?</h2>
                 <p className="text-blue-100 text-lg md:text-xl max-w-2xl mx-auto mb-10 relative z-10">
-                    Join thousands of students and creators who are already sharing their stories on Blog app.
+                    Join thousands of students and creators who are already sharing their stories on NodeBlogs.
                 </p>
                 <button 
                      onClick={() => navigate('/register')}
@@ -218,7 +224,7 @@ export default function LandingPage() {
 
       <footer className="bg-gray-50 dark:bg-gray-950 py-12 border-t border-gray-200 dark:border-gray-800">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-gray-500 dark:text-gray-400">
-              <p>&copy; {new Date().getFullYear()} Blog app. All rights reserved.</p>
+              <p>&copy; {new Date().getFullYear()} NodeBlogs. All rights reserved.</p>
           </div>
       </footer>
     </div>

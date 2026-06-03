@@ -81,3 +81,11 @@ body {
   border-top-left-radius: 0.5rem;
   border-top-right-radius: 0.5rem;
 }
+
+/* BlockNote overrides */
+.blocknote-container .bn-container {
+  background-color: transparent !important;
+}
+.blocknote-container .bn-editor {
+  background-color: transparent !important;
+}

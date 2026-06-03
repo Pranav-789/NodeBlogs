@@ -36,12 +36,12 @@ export const Sql = runtime.Sql;
 export const Decimal = runtime.Decimal;
 export const getExtensionContext = runtime.Extensions.getExtensionContext;
 /**
- * Prisma Client JS version: 7.3.0
- * Query Engine version: 9d6ad21cbbceab97458517b147a6a09ff43aa735
+ * Prisma Client JS version: 7.4.0
+ * Query Engine version: ab56fe763f921d033a6c195e7ddeb3e255bdbb57
  */
 export const prismaVersion = {
-    client: "7.3.0",
-    engine: "9d6ad21cbbceab97458517b147a6a09ff43aa735"
+    client: "7.4.0",
+    engine: "ab56fe763f921d033a6c195e7ddeb3e255bdbb57"
 };
 export const NullTypes = {
     DbNull: runtime.NullTypes.DbNull,
@@ -68,9 +68,11 @@ export const JsonNull = runtime.JsonNull;
 export const AnyNull = runtime.AnyNull;
 export const ModelName = {
     User: 'User',
+    Follows: 'Follows',
     Session: 'Session',
-    Post: 'Post',
-    Upvote: 'Upvote',
+    Todo: 'Todo',
+    Blog: 'Blog',
+    Like: 'Like',
     Comment: 'Comment'
 };
 /**
@@ -87,8 +89,15 @@ export const UserScalarFieldEnum = {
     email: 'email',
     name: 'name',
     password: 'password',
+    isVerified: 'isVerified',
+    resetPasswordToken: 'resetPasswordToken',
+    resetPasswordExpires: 'resetPasswordExpires',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
+};
+export const FollowsScalarFieldEnum = {
+    followerId: 'followerId',
+    followingId: 'followingId'
 };
 export const SessionScalarFieldEnum = {
     id: 'id',
@@ -97,24 +106,32 @@ export const SessionScalarFieldEnum = {
     expiresAt: 'expiresAt',
     createdAt: 'createdAt'
 };
-export const PostScalarFieldEnum = {
+export const TodoScalarFieldEnum = {
     id: 'id',
-    userId: 'userId',
     content: 'content',
-    tags: 'tags',
+    status: 'status',
+    userId: 'userId'
+};
+export const BlogScalarFieldEnum = {
+    id: 'id',
+    content: 'content',
+    userId: 'userId',
+    authorName: 'authorName',
+    title: 'title',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
 };
-export const UpvoteScalarFieldEnum = {
+export const LikeScalarFieldEnum = {
     id: 'id',
-    postId: 'postId',
-    userId: 'userId'
+    userId: 'userId',
+    blogId: 'blogId'
 };
 export const CommentScalarFieldEnum = {
     id: 'id',
-    postId: 'postId',
-    content: 'content',
     userId: 'userId',
+    userName: 'userName',
+    blogId: 'blogId',
+    content: 'content',
     createdAt: 'createdAt'
 };
 export const SortOrder = {

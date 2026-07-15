@@ -30,7 +30,7 @@ export default function Blogs() {
         response = await blogAPI.getRecent(page);
       } else if (activeTab === 'popular') {
         response = await blogAPI.getPopular(page);
-      } else if (activeTab === 'search') {
+      } else {
         response = await blogAPI.search(searchQuery, page);
       }
       setBlogs(response.data.data);

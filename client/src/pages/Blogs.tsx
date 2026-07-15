@@ -15,10 +15,11 @@ interface BlogPost {
 
 export default function Blogs() {
   const navigate = useNavigate();
-  const [activeTab, setActiveTab] = useState<'recent' | 'popular'>('recent');
+  const [activeTab, setActiveTab] = useState<'recent' | 'popular' | 'search'>('recent');
   const [blogs, setBlogs] = useState<BlogPost[]>([]);
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(1);
+  const [searchQuery, setSearchQuery] = useState('');
   /* const { user } = useAuth(); */
 
   const fetchBlogs = async () => {
@@ -27,8 +28,10 @@ export default function Blogs() {
       let response;
       if (activeTab === 'recent') {
         response = await blogAPI.getRecent(page);
-      } else {
+      } else if (activeTab === 'popular') {
         response = await blogAPI.getPopular(page);
+      } else if (activeTab === 'search') {
+        response = await blogAPI.search(searchQuery, page);
       }
       setBlogs(response.data.data);
     } catch (error) {
@@ -39,7 +42,10 @@ export default function Blogs() {
   };
 
   useEffect(() => {
-    fetchBlogs();
+    // Only fetch automatically if we are not in 'search' tab or if we are in 'search' tab and have a query
+    if (activeTab !== 'search' || (activeTab === 'search' && searchQuery)) {
+      fetchBlogs();
+    }
   }, [activeTab, page]);
 
   return (
@@ -57,27 +63,58 @@ export default function Blogs() {
         </Link>
       </div>
 
-      <div className="flex space-x-4 border-b border-gray-200 dark:border-gray-700">
-        <button
-          onClick={() => { setActiveTab('recent'); setPage(1); }}
-          className={`py-2 px-4 border-b-2 font-medium transition-colors ${
-            activeTab === 'recent'
-              ? 'border-blue-500 text-blue-600 dark:text-blue-400'
-              : 'border-transparent text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300'
-          }`}
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-gray-200 dark:border-gray-700 pb-2">
+        <div className="flex space-x-4">
+          <button
+            onClick={() => { setActiveTab('recent'); setPage(1); setSearchQuery(''); }}
+            className={`py-2 px-4 border-b-2 font-medium transition-colors ${
+              activeTab === 'recent'
+                ? 'border-blue-500 text-blue-600 dark:text-blue-400'
+                : 'border-transparent text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300'
+            }`}
+          >
+            Recent
+          </button>
+          <button
+            onClick={() => { setActiveTab('popular'); setPage(1); setSearchQuery(''); }}
+            className={`py-2 px-4 border-b-2 font-medium transition-colors ${
+              activeTab === 'popular'
+                ? 'border-blue-500 text-blue-600 dark:text-blue-400'
+                : 'border-transparent text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300'
+            }`}
+          >
+            Popular
+          </button>
+          {activeTab === 'search' && (
+            <button
+              className="py-2 px-4 border-b-2 border-blue-500 font-medium text-blue-600 dark:text-blue-400"
+            >
+              Search Results
+            </button>
+          )}
+        </div>
+        
+        <form 
+          onSubmit={(e) => {
+            e.preventDefault();
+            if (searchQuery.trim()) {
+              setActiveTab('search');
+              setPage(1);
+            }
+          }}
+          className="relative w-full sm:w-64"
         >
-          Recent
-        </button>
-        <button
-          onClick={() => { setActiveTab('popular'); setPage(1); }}
-          className={`py-2 px-4 border-b-2 font-medium transition-colors ${
-            activeTab === 'popular'
-              ? 'border-blue-500 text-blue-600 dark:text-blue-400'
-              : 'border-transparent text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300'
-          }`}
-        >
-          Popular
-        </button>
+          <input
+            type="text"
+            placeholder="Search blogs..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="w-full pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 outline-none"
+          />
+          <svg className="w-5 h-5 text-gray-400 absolute left-3 top-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+          </svg>
+        </form>
       </div>
 
       {loading ? (

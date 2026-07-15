@@ -500,3 +500,58 @@ export const queryComments = async(req: Request, res: Response) => {
     return res.status(200).json({ message: "blog comments fetched successfully", data: [] });
   }
 }
+
+export const searchBlogs = async(req: Request, res: Response) => {
+  const { q, page } = req.query;
+  const query = q ? String(q) : "";
+  const pageNumber = Number(page) || 1;
+
+  if (pageNumber < 1) {
+    return res.status(400).json({ message: "Invalid request" });
+  }
+
+  const limit = 10;
+  const skip = (pageNumber - 1) * limit;
+
+  try {
+    const searchResults = await prisma.blog.findMany({
+      where: {
+        OR: [
+          { title: { contains: query, mode: 'insensitive' } },
+          { content: { contains: query, mode: 'insensitive' } },
+          { authorName: { contains: query, mode: 'insensitive' } },
+        ],
+      },
+      orderBy: {
+        createdAt: 'desc',
+      },
+      skip,
+      take: limit,
+      select: {
+        id: true,
+        userId: true,
+        title: true,
+        createdAt: true,
+        authorName: true,
+        _count: {
+          select: { likes: true },
+        },
+      },
+    });
+
+    const formattedData = searchResults.map(post => ({
+      ...post,
+      authorId: post.userId
+    }));
+
+    res
+      .status(200)
+      .json({
+        message: "Posts fetched successfully",
+        data: formattedData,
+        page: pageNumber,
+      });
+  } catch (error) {
+    res.status(400).json({ message: "Error searching blogPosts" });
+  }
+}

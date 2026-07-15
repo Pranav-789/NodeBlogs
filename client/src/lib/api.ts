@@ -101,6 +101,7 @@ export const blogAPI = {
     apiClient.put('/api/blog/update', data),
   getById: (postId: number) => apiClient.get(`/api/blog/get/${postId}`),
   getPublicById: (postId: number) => apiClient.get(`/api/blog/get-public/${postId}`),
+  search: (query: string, pageNum: number) => apiClient.get('/api/blog/search', { params: { q: query, page: pageNum } }),
   getPopular: (pageNum: number) => apiClient.get(`/api/blog/popular/${pageNum}`),
   checkLike: (blogId: number) => apiClient.get(`/api/blog/check-like/${blogId}`),
   countByAuthor: (authorId: number) => apiClient.get(`/api/blog/count-author/${authorId}`),

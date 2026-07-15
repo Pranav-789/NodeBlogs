@@ -261,8 +261,8 @@ export const logout = async(req: Request, res: Response) => {
         await prisma.session.delete({where: {id: sessionId}});
 
         return res.status(201)
-        .clearCookie("refreshToken")
-        .clearCookie("accessToken")
+        .clearCookie("refreshToken", { httpOnly: true, sameSite: "none", secure: true })
+        .clearCookie("accessToken", { httpOnly: true, sameSite: "none", secure: true })
         .json({message: "Logout successful!!"});
     } catch (error) {
         return res.status(400).json({ message: "Invalid or expired token" });
